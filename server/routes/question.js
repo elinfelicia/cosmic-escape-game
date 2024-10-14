@@ -30,10 +30,14 @@ router.get('/generate-question', async (req, res) => {
 
         // Check if the question and answers are valid
         if (!question || answers.length < 4) {
+            console.error('Invalid question or answers:', { question, answers }); // Log invalid question/answers
             return res.status(500).send('Invalid question format received from OpenAI');
         }
 
-        res.json({ question, answers });
+        // Assuming you want to randomly select one of the answers as the correct answer
+        const correctAnswer = answers[Math.floor(Math.random() * answers.length)]; // Randomly select a correct answer
+
+        res.json({ question, answers, correctAnswer }); // Send back the question, answers, and correct answer
     } catch (error) {
         console.error('Error generating question:', error);
         res.status(500).send({ error: 'Error generating question', details: error.message });

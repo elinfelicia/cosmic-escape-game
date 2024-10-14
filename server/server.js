@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const http = require('http');
 const socketIo = require('socket.io');
 const dotenv = require('dotenv');
-const questionRoutes = require('./routes/question');
+const scenarioRoutes = require('./routes/scenario');
 const cors = require('cors');
 dotenv.config();
 
@@ -20,7 +20,7 @@ const corsOptions = {
 
 // Apply CORS middleware to Express
 app.use(cors(corsOptions));
-app.use('/api', questionRoutes); 
+app.use('/api', scenarioRoutes);
 
 // Initialize Socket.IO with CORS options
 const io = socketIo(server, {

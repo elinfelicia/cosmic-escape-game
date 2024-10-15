@@ -1,5 +1,5 @@
 // src/components/Game.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
 const Game: React.FC = () => {
@@ -12,9 +12,15 @@ const Game: React.FC = () => {
     const [feedback, setFeedback] = useState<string>('');
     const [scenarios, setScenarios] = useState<any[]>([]); // Keep using any
     const [currentScenarioIndex, setCurrentScenarioIndex] = useState<number>(0); // Track current scenario index
+    const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store the timer
 
     useEffect(() => {
         startGame(); // Start the game when the component mounts
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current); // Clear the interval on unmount
+            }
+        };
     }, []);
 
     const startGame = async () => {
@@ -22,10 +28,16 @@ const Game: React.FC = () => {
             const response = await axios.post('http://localhost:4000/api/start-game'); // Start the game and generate scenarios
             setScenarios(response.data.scenarios); // Set the scenarios state
             requestNewScenario(); // Fetch the first scenario after starting the game
-            const countdown = setInterval(() => {
+
+            // Clear any existing timer before starting a new one
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+
+            timerRef.current = setInterval(() => {
                 setTimer(prev => {
                     if (prev <= 1) {
-                        clearInterval(countdown);
+                        clearInterval(timerRef.current!);
                         setGameOver(true);
                         return 0;
                     }
@@ -33,7 +45,6 @@ const Game: React.FC = () => {
                 });
             }, 1000); // Decrease timer every second
 
-            return () => clearInterval(countdown); // Cleanup interval on unmount
         } catch (error) {
             console.error('Error starting game:', error);
             setFeedback("Error starting game. Please try again.");
@@ -76,18 +87,19 @@ const Game: React.FC = () => {
         requestNewScenario(); // Fetch the next scenario
     };
 
+    const handleRestart = () => {
+        setGameOver(false);
+        setScore(0);
+        setTimer(180); // Reset timer to 3 minutes
+        setCurrentScenarioIndex(0); // Reset scenario index
+        startGame(); // Restart the game
+    };
+
     if (gameOver) {
         return (
             <div>
                 <h2>{feedback}</h2>
-                <button onClick={() => {
-                    setGameOver(false);
-                    setScore(0);
-                    setTimer(180); // Reset timer to 3 minutes
-                    startGame(); // Restart the game
-                }}>
-                    Restart Game
-                </button>
+                <button onClick={handleRestart}>Restart Game</button> {/* Call handleRestart on click */}
             </div>
         );
     }

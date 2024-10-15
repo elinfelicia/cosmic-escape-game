@@ -1,3 +1,4 @@
+// server/server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
@@ -12,7 +13,7 @@ const server = http.createServer(app);
 
 // CORS options for both Express and Socket.IO
 const corsOptions = {
-    origin: 'http://localhost:5174', // Allow only this origin
+    origin: ['http://localhost:5173', 'http://localhost:5174'], // Allow both origins
     methods: ['GET', 'POST'],
     allowedHeaders: ['my-custom-header'],
     credentials: true
@@ -27,8 +28,6 @@ const io = socketIo(server, {
     cors: corsOptions // Use the same CORS options
 });
 
-console.log('MongoDB URI:', process.env.MONGODB_URI);
-
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected'))
@@ -42,8 +41,7 @@ app.get('/', (req, res) => {
     res.send('Cosmic Escape API');
 });
 
-const { generatePuzzle } = require('./gameLogic');
-
+// Socket.IO connection handling
 io.on('connection', (socket) => {
     console.log('New client connected');
 

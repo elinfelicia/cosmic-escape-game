@@ -1,0 +1,46 @@
+// src/styles/_landingPage.scss
+@use 'variables';
+
+.welcome-msg {
+    background-color: rgba(46, 41, 78, 0.8); // Semi-transparent dark background
+    border-radius: $border-radius;
+    padding: $padding;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: 0 0 40px rgb(65, 56, 127);
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: $margin;
+        text-shadow: 0 0 10px $lilac; // Bright shadow for title
+    }
+
+    p {
+        font-size: 1.2rem;
+        margin: $margin 0;
+        color: $lilac; // Light color for paragraph text
+    }
+
+    button {
+        background-color: $button-color; // Button color
+        color: $tea-rose-red; // Text color for buttons
+        border: none;
+        border-radius: $border-radius;
+        padding: $padding;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: $button-hover-color; // Darken on hover
+        }
+    }
+}

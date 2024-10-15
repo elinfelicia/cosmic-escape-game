@@ -14,7 +14,7 @@ const generateScenarios = async () => {
             messages: [
                 { 
                     role: 'user', 
-                    content: "Generate a sequence of 30 short scenarios all taking place in the corridor of a spaceship filled with dangers and enemies, where the goal is to move through the ship towards the exit. Each scenario should have two choices (A and B). Randomly alternate between assigning either A or B as the correct answer and add '(correct)' to the correct answer. Format the response as follows: 'Scenario: [description]. Choices: A) [option1] (correct) B) [option2]' or 'Scenario: [description]. Choices: A) [option1] B) [option2] (correct)'"
+                    content: "Generate a sequence of 30 short scenarios, all taking place in the corridor of a spaceship filled with dangers and enemies. The player’s goal is to move through the ship towards the exit by making the correct choice in each scenario. Each scenario should have two choices (A and B), and one of these should be marked as the correct answer by adding '(correct)' to it. Randomly alternate between marking A or B as correct for each scenario. Ensure that the selection of A or B as correct is unpredictable and varies throughout the sequence. Format each response as follows: 'Scenario: [description]. Choices: A) [option1] B) [option2]' with '(correct)' added to the correct answer option."
                 }
             ],
             max_tokens: 1500, 

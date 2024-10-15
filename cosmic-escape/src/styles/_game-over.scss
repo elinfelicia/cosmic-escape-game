@@ -1,0 +1,41 @@
+// src/styles/_game-over.scss
+@use 'variables';
+
+.game-over, .feedback {
+    text-align: center;
+    color: $tea-rose-red; // Use the feedback color
+    background-color: rgba(46, 41, 78, 0.8); // Semi-transparent dark background
+    border-radius: $border-radius;
+    padding: $padding;
+    box-shadow: 0 0 40px rgba(170, 12, 228, 0.5);
+    text-align: center;
+    width: 100%;
+    max-width: 1600px;
+    // position: relative;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: $margin;
+        text-shadow: 0 0 10px $lilac; // Bright shadow for game over message
+    }
+
+    button {
+        background-color: $button-color; // Button color
+        color: $tea-rose-red; // Text color for buttons
+        border: none;
+        border-radius: $border-radius;
+        padding: $padding;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: $button-hover-color; // Darken on hover
+        }
+    }
+}

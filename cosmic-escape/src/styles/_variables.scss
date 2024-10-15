@@ -1,0 +1,22 @@
+// src/styles/_variables.scss
+
+// Dark theme colors
+$oxford-blue: #011638ff; // Dark background
+$space-cadet: #2e294eff; // Darker background for contrast
+$purpureus: #9055a2ff; // Accent color for buttons and highlights
+$lilac: #d499b9ff; // Light color for text
+$tea-rose-red: #e8c1c5ff; // Feedback message color
+
+// General styling variables
+$font-family: 'Agdasima', sans-serif; // Retro font
+$border-radius: 8px; // Rounded corners
+$padding: 16px; // General padding
+$margin: 16px; // General margin
+
+// Button colors
+$button-color: $purpureus; // Button color
+$button-hover-color: darken($purpureus, 10%); // Button hover color
+
+// Text colors
+$text-color: $tea-rose-red; // Bright text color for readability
+$feedback-color: $lilac; // Feedback message color

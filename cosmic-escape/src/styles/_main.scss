@@ -1,69 +1,94 @@
-:root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-  
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-  
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  a {
-    font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
-  }
-  a:hover {
-    color: #535bf2;
-  }
-  
-  body {
+// src/styles/_main.scss
+@use 'variables';
+
+body {
+    background: rgb(15, 7, 20); // Use radial gradient for background
+    background-image: url('../assets/CE-bg.jpeg');
+    color: $tea-rose-red; // Bright text color for readability
+    font-family: $font-family; // Keep the retro font
     margin: 0;
+    padding: 0;
     display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-  }
-  
-  h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
-  }
-  
-  button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-  }
-  button:hover {
-    border-color: #646cff;
-  }
-  button:focus,
-  button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-  }
-  
-  @media (prefers-color-scheme: light) {
-    :root {
-      color: #213547;
-      background-color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    background-color: rgba(46, 41, 78, 0.8); // Semi-transparent dark background
+    border-radius: $border-radius;
+    padding: $padding;
+    box-shadow: 0 0 40px rgba(170, 12, 228, 0.5);
+    text-align: center;
+    width: 100%;
+    max-width: 1600px;
+    // position: relative;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: $margin;
+        text-shadow: 0 0 10px $tea-rose-red; // Bright shadow for title
     }
-    a:hover {
-      color: #747bff;
+
+    h2 {
+        font-size: 1.5rem;
+        margin: $margin 0;
     }
+
+    h3 {
+        font-size: 1.2rem;
+        margin: $margin 0;
+        color: $lilac; // Light color for scenario text
+    }
+
+    .choices {
+        display: flex;
+        flex-direction: column;
+        gap: $margin;
+    }
+
     button {
-      background-color: #f9f9f9;
+        background-color: $button-color; // Button color
+        color: $tea-rose-red; // Text color for buttons
+        border: none;
+        border-radius: $border-radius;
+        padding: $padding;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); // Button shadow for depth
+
+        &:hover {
+            background-color: $button-hover-color; // Darken on hover
+        }
     }
-  }
-  
+
+    .feedback {
+        color: $tea-rose-red; // Feedback message color
+        font-size: 1.1rem;
+        margin-top: $margin;
+        text-shadow: 0 0 5px $lilac; // Shadow for feedback
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+        }
+
+        button {
+            font-size: 1rem;
+            padding: 12px;
+        }
+    }
+}

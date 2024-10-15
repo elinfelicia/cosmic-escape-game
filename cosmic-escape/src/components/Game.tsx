@@ -39,6 +39,7 @@ const Game: React.FC = () => {
                     if (prev <= 1) {
                         clearInterval(timerRef.current!);
                         setGameOver(true);
+                        setFeedback("Time's up! You didn't make it to the exit. The ship has imploded, and well... You are dead :)");
                         return 0;
                     }
                     return prev - 1;
@@ -97,7 +98,7 @@ const Game: React.FC = () => {
 
     if (gameOver) {
         return (
-            <div>
+            <div className='game-over'>
                 <h2>{feedback}</h2>
                 <button onClick={handleRestart}>Restart Game</button> {/* Call handleRestart on click */}
             </div>
@@ -105,18 +106,18 @@ const Game: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className='game-container'>
             <h1>Cosmic Escape</h1>
             <h2>Time Left: {timer}s</h2>
             <h2>Score: {score}</h2>
             <h3>{displayedScenario}</h3> {/* Display the scenario directly */}
             {displayedScenario && ( // Only show choices after the scenario is fully displayed
-                <div>
+                <div className='choices'>
                     <button onClick={() => handleChoice('A')}>{choices.A}</button>
                     <button onClick={() => handleChoice('B')}>{choices.B}</button>
                 </div>
             )}
-            {feedback && <p>{feedback}</p>} {/* Display feedback message */}
+            {feedback && <p className='feedback'>{feedback}</p>} {/* Display feedback message */}
         </div>
     );
 };

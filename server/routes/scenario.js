@@ -14,7 +14,7 @@ const generateScenarios = async () => {
             messages: [
                 { 
                     role: 'user', 
-                    content: "Generate a sequence of 30 short scenarios for a space-themed adventure on a spaceship. Each scenario should have two choices (A and B). Randomly assign one of them as the correct answer. Format the response as follows: 'Scenario: [description]. Choices: A) [option1] (correct) B) [option2]' or 'Scenario: [description]. Choices: A) [option1] B) [option2] (correct)'" 
+                    content: "Generate a sequence of 30 short scenarios all taking place in the corridor of a spaceship filled with dangers and enemies, where the goal is to move through the ship towards the exit. Each scenario should have two choices (A and B). Randomly alternate between assigning either A or B as the correct answer and add '(correct)' to the correct answer. Format the response as follows: 'Scenario: [description]. Choices: A) [option1] (correct) B) [option2]' or 'Scenario: [description]. Choices: A) [option1] B) [option2] (correct)'"
                 }
             ],
             max_tokens: 1500, 
@@ -29,30 +29,41 @@ const generateScenarios = async () => {
         console.log('OpenAI Scenario Response:', scenarioData);
 
         // Parse the scenarios
-        const scenarioLines = scenarioData.split('\n');
-        scenarios = scenarioLines.map(line => {
-            const [scenario, choices] = line.split('Choices:');
-            const options = choices.split('B)');
-            const choiceA = options[0].trim().replace('A)', '').trim();
-            const choiceB = options[1].trim();
+        const scenarioLines = scenarioData.split('\n').filter(line => line.trim() !== ''); // Filter out empty lines
 
-            // Determine which choice is correct
+        scenarios = scenarioLines.map(line => {
+            // Ensure we have both scenario and choices parts
+            const [scenarioPart, choicesPart] = line.split('Choices:');
+            if (!scenarioPart || !choicesPart) return null;
+
+            // Trim and sanitize scenario text
+            const scenario = scenarioPart.replace('Scenario:', '').trim();
+
+            // Extract and clean up choices
+            const options = choicesPart.split('B)');
+            const choiceA = options[0] ? options[0].replace(/A\)/, '').replace('(correct)', '').trim() : 'Choice A not available';
+            const choiceB = options[1] ? options[1].replace('(correct)', '').trim() : 'Choice B not available';
+
+            // Determine correct answer based on "(correct)" keyword
             let correctAnswer;
-            if (choiceA.includes('(correct)')) {
+            if (options[0] && options[0].includes('(correct)')) {
                 correctAnswer = 'A';
-            } else if (choiceB.includes('(correct)')) {
+            } else if (options[1] && options[1].includes('(correct)')) {
                 correctAnswer = 'B';
             } else {
-                // Randomly assign correct answer if not marked
-                correctAnswer = Math.random() < 0.5 ? 'A' : 'B';
+                // Default to A if neither has "(correct)" as a fallback
+                correctAnswer = 'A';
             }
 
             return {
-                scenario: scenario.trim(),
-                choices: { A: choiceA.replace(' (correct)', ''), B: choiceB.replace(' (correct)', '') },
+                scenario: scenario,
+                choices: { A: choiceA, B: choiceB },
                 correctAnswer
             };
-        });
+        }).filter(scenario => scenario !== null); // Filter out any null scenarios
+
+        console.log('Parsed Scenarios:', scenarios); // Log parsed scenarios for debugging
+
     } catch (error) {
         console.error('Error generating scenarios:', error);
     }

@@ -1,0 +1,19 @@
+.loading-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; // Full height of the viewport
+    color: white; // Text color
+    font-size: 2rem; // Font size for loading text
+
+    .loading-emoji {
+        font-size: 5rem; // Size of the emoji
+        animation: spin 1s linear infinite; // Apply spinning animation
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

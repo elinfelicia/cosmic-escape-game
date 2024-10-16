@@ -1,4 +1,3 @@
-// src/components/Game.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
@@ -12,6 +11,7 @@ const Game: React.FC = () => {
     const [feedback, setFeedback] = useState<string>('');
     const [scenarios, setScenarios] = useState<any[]>([]); // Keep using any
     const [currentScenarioIndex, setCurrentScenarioIndex] = useState<number>(0); // Track current scenario index
+    const [loading, setLoading] = useState<boolean>(false); // State to track loading
     const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store the timer
 
     useEffect(() => {
@@ -24,31 +24,16 @@ const Game: React.FC = () => {
     }, []);
 
     const startGame = async () => {
+        setLoading(true); // Set loading to true
         try {
             const response = await axios.post('http://localhost:4000/api/start-game'); // Start the game and generate scenarios
             setScenarios(response.data.scenarios); // Set the scenarios state
             requestNewScenario(); // Fetch the first scenario after starting the game
-
-            // Clear any existing timer before starting a new one
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-            }
-
-            timerRef.current = setInterval(() => {
-                setTimer(prev => {
-                    if (prev <= 1) {
-                        clearInterval(timerRef.current!);
-                        setGameOver(true);
-                        setFeedback("Time's up! You didn't make it to the exit. The ship has imploded, and well... You are dead :)");
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000); // Decrease timer every second
-
         } catch (error) {
             console.error('Error starting game:', error);
             setFeedback("Error starting game. Please try again.");
+        } finally {
+            setLoading(false); // Set loading to false after fetching
         }
     };
 
@@ -96,6 +81,14 @@ const Game: React.FC = () => {
         setCurrentScenarioIndex(0); // Reset scenario index
         await startGame(); // Restart the game and generate new scenarios
     };
+
+    if (loading) {
+        return (
+            <div className='loading-screen'>
+                <span role="img" aria-label="robot" className="loading-emoji">🤖</span>
+            </div>
+        );
+    }
 
     if (gameOver) {
         return (

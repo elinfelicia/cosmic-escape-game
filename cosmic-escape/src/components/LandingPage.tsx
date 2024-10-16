@@ -6,11 +6,12 @@
            <div className="welcome-msg">
                <h1>Welcome to Cosmic Escape!</h1>
                <h2>🤖 Greetings, human! </h2>
-               <p>You've woken up trapped on a spaceship about to implode! 
-                   You have to escape before the timer runs out. Answer my questions correctly to 
-                   move closer to the exit. But be careful, an incorrect answer will cost you time! 
-                   Now, are you ready to save your skin? 
+               <p>You have woken up trapped on a spaceship about to implode! 
+                   You have to escape before the timer runs out. There will be dangers along the way, and it is up to you to decide your fate. 
+                   A correct choice in each scenario will move you closer to the exit. But be careful, an incorrect answer will cost you time! 
+                   
                 </p>
+                <p>Now, are you ready to attempt an escape? </p>
                <button onClick={onStart}>Start Game</button>
            </div>
        );

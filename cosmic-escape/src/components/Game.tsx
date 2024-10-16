@@ -6,16 +6,20 @@ const Game: React.FC = () => {
     const [displayedScenario, setDisplayedScenario] = useState<string>(''); // For displaying the scenario
     const [choices, setChoices] = useState<{ A: string; B: string }>({ A: '', B: '' });
     const [score, setScore] = useState<number>(0);
-    const [timer, setTimer] = useState<number>(180); // Start at 3 minutes (180 seconds)
+    const [timer, setTimer] = useState<number>(150); // Start at 150 seconds
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [feedback, setFeedback] = useState<string>('');
     const [scenarios, setScenarios] = useState<any[]>([]); // Keep using any
     const [currentScenarioIndex, setCurrentScenarioIndex] = useState<number>(0); // Track current scenario index
     const [loading, setLoading] = useState<boolean>(false); // State to track loading
     const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store the timer
+    const hasStarted = useRef<boolean>(false); // Flag to check if the game has started
 
     useEffect(() => {
-        startGame(); // Start the game when the component mounts
+        if (!hasStarted.current) {
+            startGame(); // Start the game when the component mounts
+            hasStarted.current = true; // Set the flag to true after starting the game
+        }
         return () => {
             if (timerRef.current) {
                 clearInterval(timerRef.current); // Clear the interval on unmount
@@ -25,10 +29,34 @@ const Game: React.FC = () => {
 
     const startGame = async () => {
         setLoading(true); // Set loading to true
+        setTimer(150); // Reset timer to 150 seconds
+        setScore(0); // Reset score
+        setCurrentScenarioIndex(0); // Reset scenario index
+        setGameOver(false); // Reset game over state
+        setFeedback(''); // Clear feedback message
+
+        // Clear any existing timer before starting a new one
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+
         try {
             const response = await axios.post('http://localhost:4000/api/start-game'); // Start the game and generate scenarios
             setScenarios(response.data.scenarios); // Set the scenarios state
             requestNewScenario(); // Fetch the first scenario after starting the game
+
+            // Start the timer countdown
+            timerRef.current = setInterval(() => {
+                setTimer(prev => {
+                    if (prev <= 1) {
+                        clearInterval(timerRef.current!);
+                        setGameOver(true);
+                        setFeedback("Time's up! You didn't make it to the exit. The ship has imploded, and well... You are dead :)");
+                        return 0;
+                    }
+                    return prev - 1; // Decrease timer every second
+                });
+            }, 1000); // 1000 ms = 1 second
         } catch (error) {
             console.error('Error starting game:', error);
             setFeedback("Error starting game. Please try again.");
@@ -54,16 +82,16 @@ const Game: React.FC = () => {
 
         if (choice === correctAnswer) { // Check if the player's choice matches the correct answer
             setScore(prev => prev + 1);
-            setFeedback("Correct!");
+            setFeedback("Good choice, you have moved closer to the exit!!");
         } else {
-            setFeedback("Incorrect!");
-            setTimer(prev => Math.max(prev - 10, 0)); // Deduct 10 seconds
+            setFeedback("Uh oh, that was a baaaad choice and has cost you precious time!");
+            setTimer(prev => Math.max(prev - 10, 0)); // Deduct 10 seconds for incorrect choice
         }
 
         // Check for winning condition
         if (score + 1 >= 10) {
             setGameOver(true);
-            setFeedback("Congratulations! You’ve successfully escaped the ship!");
+            setFeedback("Congratulations! You have successfully exited the ship! You are now aimlessly floating around in an escape pod, yay! :)");
             return;
         }
 
@@ -74,11 +102,10 @@ const Game: React.FC = () => {
     };
 
     const handleRestart = async () => {
-        setFeedback(''); // Clear feedback message
-        setGameOver(false);
-        setScore(0);
-        setTimer(180); // Reset timer to 3 minutes
-        setCurrentScenarioIndex(0); // Reset scenario index
+        // Clear the existing timer before restarting the game
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
         await startGame(); // Restart the game and generate new scenarios
     };
 
@@ -103,7 +130,7 @@ const Game: React.FC = () => {
         <div className='game-container'>
             <h1>Cosmic Escape</h1>
             <h2>Time Left: {timer}s</h2>
-            <h2>Score: {score}</h2>
+            <h2>Progress: {score}</h2>
             <h3>{displayedScenario}</h3> {/* Display the scenario directly */}
             {displayedScenario && ( // Only show choices after the scenario is fully displayed
                 <div className='choices'>

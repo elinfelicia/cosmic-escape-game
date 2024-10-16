@@ -88,12 +88,13 @@ const Game: React.FC = () => {
         requestNewScenario(); // Fetch the next scenario
     };
 
-    const handleRestart = () => {
+    const handleRestart = async () => {
+        setFeedback(''); // Clear feedback message
         setGameOver(false);
         setScore(0);
         setTimer(180); // Reset timer to 3 minutes
         setCurrentScenarioIndex(0); // Reset scenario index
-        startGame(); // Restart the game
+        await startGame(); // Restart the game and generate new scenarios
     };
 
     if (gameOver) {

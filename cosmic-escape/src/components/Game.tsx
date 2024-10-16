@@ -111,7 +111,9 @@ const Game: React.FC = () => {
                     <button onClick={() => handleChoice('B')}>{choices.B}</button>
                 </div>
             )}
-            {feedback && <p className='feedback'>{feedback}</p>} {/* Display feedback message */}
+            {/* Invisible feedback element */}
+            <p className='feedback invisible-feedback'>Feedback will appear here.</p> {/* Invisible feedback message */}
+            <p className='feedback' style={{ visibility: feedback ? 'visible' : 'hidden' }}>{feedback}</p> {/* Display feedback message */}
         </div>
     );
 };

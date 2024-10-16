@@ -87,8 +87,14 @@ body {
 .game-container .feedback {
   color: #e8c1c5;
   font-size: 2rem;
-  margin-top: 16px;
   text-shadow: 0 0 5px #d499b9;
+  height: 2rem;
+  margin-top: -2rem;
+}
+.game-container .invisible-feedback {
+  visibility: hidden;
+  height: 2rem;
+  margin-top: -2rem;
 }
 @media (max-width: 768px) {
   .game-container h1 {

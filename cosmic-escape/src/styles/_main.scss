@@ -73,8 +73,15 @@ body {
     .feedback {
         color: $tea-rose-red; // Feedback message color
         font-size: 2rem;
-        margin-top: $margin;
         text-shadow: 0 0 5px $lilac; // Shadow for feedback
+        height: 2rem; // Set a fixed height to maintain layout
+        margin-top: -2rem;
+    }
+    
+    .invisible-feedback {
+        visibility: hidden; // Make the feedback invisible
+        height: 2rem; // Set a fixed height to maintain layout
+        margin-top: -2rem;
     }
 
     @media (max-width: 768px) {

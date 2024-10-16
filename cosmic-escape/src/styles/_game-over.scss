@@ -1,7 +1,7 @@
 // src/styles/_game-over.scss
 @use 'variables';
 
-.game-over, .feedback {
+.game-over {
     text-align: center;
     color: $tea-rose-red; // Use the feedback color
     background-color: rgba(46, 41, 78, 0.8); // Semi-transparent dark background

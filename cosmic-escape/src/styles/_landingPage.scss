@@ -22,11 +22,15 @@
         margin-bottom: $margin;
         text-shadow: 0 0 10px $lilac; // Bright shadow for title
     }
+    h2 {
+        font-size: 3rem;
+    }
 
     p {
-        font-size: 1.2rem;
+        font-size: 2rem;
         margin: $margin 0;
         color: $lilac; // Light color for paragraph text
+        margin-top: -20px;
     }
 
     button {

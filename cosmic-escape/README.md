@@ -48,8 +48,7 @@ MONGODB_URI=your_mongodb_uri
 PORT=4000
 OPENAI_API_KEY=your_openai_api_key
 
-
-### Explanation of Environment Variables:
+### Explanation of Environment Variables
 
 - `MONGODB_URI`: The connection string for your MongoDB database. Replace `<username>`, `<password>`, and `<your-cluster-url>` with your MongoDB credentials and cluster information.
 - `PORT`: The port on which the server will run (default is 4000).
@@ -76,4 +75,3 @@ OPENAI_API_KEY=your_openai_api_key
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details
-

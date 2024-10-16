@@ -1,12 +1,11 @@
-// server/server.js
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
 const socketIo = require('socket.io');
-const dotenv = require('dotenv');
 const scenarioRoutes = require('./routes/scenario');
 const cors = require('cors');
-dotenv.config();
 
 const app = express();
 const server = http.createServer(app);

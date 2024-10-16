@@ -2,9 +2,21 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 let scenarios = []; // Array to hold the generated scenarios
 let currentScenarioIndex = 0; // Track the current scenario index
+
+const scenarioSchema = new mongoose.Schema({
+    scenario: { type: String, required: true },
+    choices: {
+        A: { type: String, required: true },
+        B: { type: String, required: true },
+    },
+    correctAnswer: { type: String, required: true },
+});
+
+module.exports = mongoose.model('Scenario', scenarioSchema);
 
 // Function to generate scenarios
 const generateScenarios = async () => {
@@ -14,7 +26,7 @@ const generateScenarios = async () => {
             messages: [
                 { 
                     role: 'user', 
-                    content: "Generate a sequence of 30 short scenarios, all taking place in the corridor of a spaceship filled with dangers and enemies. The player’s goal is to move through the ship towards the exit by making the correct choice in each scenario. Each scenario should have two choices (A and B), and one of these should be marked as the correct answer by adding '(correct)' to it. Randomly alternate between marking A or B as correct for each scenario. Ensure that the selection of A or B as correct is unpredictable and varies throughout the sequence. Format each response as follows: 'Scenario: [description]. Choices: A) [option1] B) [option2]' with '(correct)' added to the correct answer option."
+                    content: "Generate a sequence of 30 short scenarios, all taking place in the corridor of a spaceship filled with dangers and enemies. The player’s goal is to move through the ship towards the exit by making the correct choice in each scenario. Each scenario should have two choices (A and B), and one of these should be marked as the correct answer by adding '(correct)' to it. Randomly alternate between marking A or B as correct for each scenario. Ensure that the selection of A or B as correct is unpredictable and varies throughout the sequence. Format each response as follows: 'Scenario: [description]. Choices: A) [option1] B) [option2]'."
                 }
             ],
             max_tokens: 1500, 
@@ -41,19 +53,23 @@ const generateScenarios = async () => {
 
             // Extract and clean up choices
             const options = choicesPart.split('B)');
-            const choiceA = options[0] ? options[0].replace(/A\)/, '').replace('(correct)', '').trim() : 'Choice A not available';
-            const choiceB = options[1] ? options[1].replace('(correct)', '').trim() : 'Choice B not available';
+            const choiceA = options[0] ? options[0].replace(/A\)/, '').trim() : 'Choice A not available';
+            const choiceB = options[1] ? options[1].replace(/B\)/, '').replace('(correct)', '').trim() : 'Choice B not available';
 
             // Determine correct answer based on "(correct)" keyword
             let correctAnswer;
-            if (options[0] && options[0].includes('(correct)')) {
+            if (choiceA.includes('(correct)')) {
                 correctAnswer = 'A';
-            } else if (options[1] && options[1].includes('(correct)')) {
+                choiceA = choiceA.replace('(correct)', '').trim(); // Remove the marker from the choice
+            } else if (choiceB.includes('(correct)')) {
                 correctAnswer = 'B';
+                choiceB = choiceB.replace('(correct)', '').trim(); // Remove the marker from the choice
             } else {
-                // Default to A if neither has "(correct)" as a fallback
-                correctAnswer = 'A';
+                // Randomly assign correct answer if neither is marked
+                correctAnswer = Math.random() < 0.5 ? 'A' : 'B';
             }
+
+            console.log(`Scenario: ${scenario}, Choices: A) ${choiceA}, B) ${choiceB}, Correct Answer: ${correctAnswer}`); // Debugging output
 
             return {
                 scenario: scenario,
@@ -68,6 +84,8 @@ const generateScenarios = async () => {
         console.error('Error generating scenarios:', error);
     }
 };
+
+console.log('Using OpenAI API Key:', process.env.OPENAI_API_KEY);
 
 // Route to start the game and generate scenarios
 router.post('/start-game', async (req, res) => {
